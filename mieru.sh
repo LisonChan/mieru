@@ -54,7 +54,7 @@ check_ip() {
     ipv6=$(curl -s6m8 ip.p3terx.com | sed -n 1p)
 }
 
-# ========== 新增：安装全局快捷命令函数 ==========
+# ========== 安装全局快捷命令函数 ==========
 install_shortcut(){
     SCRIPT_PATH="/usr/local/bin/mieru"
 
@@ -102,17 +102,37 @@ inst_mita(){
     edit_conf
 
     # 在成功安装并启动后，创建全局快捷命令
-    # 注意：确保 mita 安装成功后再创建命令（用户期望能直接通过该命令进入菜单）
     if command -v mita >/dev/null 2>&1; then
         install_shortcut || yellow "提示：未能自动创建快捷命令，请手动创建或检查网络"
     fi
 }
 
+# ========== 修改：卸载时同时移除交互菜单 ==========
 unst_mita(){
-    mita stop
+    # 停止服务（若存在）
+    if command -v mita >/dev/null 2>&1; then
+        mita stop >/dev/null 2>&1
+    fi
+
+    # 卸载 mita 包
     ${PACKAGE_UNINSTALL[int]} mita
+
+    # 删除全局快捷命令（/usr/local/bin/mieru）
+    SHORTCUT_PATH="/usr/local/bin/mieru"
+    if [[ -f "$SHORTCUT_PATH" ]]; then
+        rm -f "$SHORTCUT_PATH" && green "已移除交互菜单快捷命令：$SHORTCUT_PATH"
+    else
+        yellow "未发现交互菜单快捷命令（$SHORTCUT_PATH），无需移除"
+    fi
+
+    # 删除客户端配置目录（若存在）
+    if [[ -d "/root/mieru" ]]; then
+        rm -rf /root/mieru && green "/root/mieru 客户端配置目录已移除"
+    fi
+
     green "mieru 已彻底卸载完成"
 }
+# ==============================================
 
 mita_switch(){
     yellow "请选择你需要的操作："
