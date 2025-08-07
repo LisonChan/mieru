@@ -263,7 +263,7 @@ EOF
                     ]
                 }
             ],
-            "mtu": 1400
+            "mtu": $MTU
         }
     ],
     "activeProfile": "default",
