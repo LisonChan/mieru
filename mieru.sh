@@ -223,7 +223,6 @@ edit_conf(){
 }
 EOF
     mita apply config server_config.json
-    rm -f server_config.json
 
     # Warp 检测与配置
     warpv6=$(curl -s6m5 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
