@@ -263,7 +263,11 @@ EOF
                     ]
                 }
             ],
-            "mtu": $MTU
+            "mtu": $MTU,
+            "multiplexing": {
+                "level": "MULTIPLEXING_HIGH"
+            },
+            "handshakeMode": "HANDSHAKE_NO_WAIT"
         }
     ],
     "activeProfile": "default",
